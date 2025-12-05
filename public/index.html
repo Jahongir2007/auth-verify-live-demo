@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Getting QR code for 2FA</title>
+</head>
+<body>
+   <h1>Getting QR code for 2FA</h1>
+  <button id="getQRBtn">Get QR</button><br>
+  <img id="qrImage" /><br>
+  <input type="text" id="userCode" placeholder="Enter your code">
+  <button id="verifyBtn">Verify code</button><br>
+  <span></span>
+  <script src="https://cdn.jsdelivr.net/gh/jahongir2007/auth-verify/auth-verify.client.js"></script>
+  <script>
+
+  const qrImage = document.getElementById('qrImage');
+  const qrBtn = document.getElementById('getQRBtn');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const userCodeInput = document.getElementById('userCode');
+  const resultSpan = document.querySelector('span');
+
+  const auth = new AuthVerify({
+    apiBase: 'http://localhost:3000',
+    qrEl: qrImage
+  });
+
+  // GET QR code
+  qrBtn.addEventListener('click', async () => {
+    auth.get('/api/qr'); // set the URL for GET
+    await auth.qr(); // fetch and display QR
+  });
+
+  // VERIFY code
+  verifyBtn.addEventListener('click', async () => {
+    const userCode = userCodeInput.value;
+
+    auth.post('/api/verify'); // set URL for POST
+    const result = await auth.verify(userCode); // send code to server
+
+    if (result.verified) {
+      resultSpan.innerText = '✅ Verified!';
+    } else {
+      resultSpan.innerText = '❌ Invalid code';
+    }
+  });
+
+  </script>
+</body>
+</html>
