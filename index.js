@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cors = require("cors");
 const AuthVerify = require('auth-verify');
 
 const app = express();
@@ -8,6 +9,10 @@ const PORT = 3000;
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors({
+  origin: "https://jahongir2007.github.io",
+}));
 
 const auth = new AuthVerify();
 
